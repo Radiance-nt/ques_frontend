@@ -27,7 +27,13 @@
             <input type="checkbox" :id="'option' + idx" :value="option">
             <label :for="'option' + idx">{{ option }}</label>
           </div>
+          <div class="other-option">
+            <input type="checkbox" id="otherOption" value="other">
+            <label for="otherOption">Others</label>
+            <input type="text" v-model="otherValue" placeholder="">
+          </div>
         </div>
+
         <div v-else-if="item.type === 13" class="survey">
           <div v-html="markdownToHtml(item.content.question)" class="markdown"></div>
           <textarea v-model="item.content.answer" class="text-input"></textarea>
