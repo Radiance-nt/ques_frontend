@@ -154,6 +154,12 @@ export default {
 .video-wrapper {
   display: flex;
   justify-content: center;
+  max-width: 100%;
+}
+
+.video-wrapper video {
+  max-width: 100%;
+  height: auto;
 }
 
 .survey h3 {
