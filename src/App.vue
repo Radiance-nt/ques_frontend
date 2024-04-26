@@ -173,7 +173,7 @@ export default {
   -moz-osx-font-smoothing: grayscale;
   color: #2c3e50;
   margin: 60px auto;
-  max-width: 800px;
+  max-width: 1000px;
 }
 
 .content-wrapper {
