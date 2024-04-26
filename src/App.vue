@@ -3,11 +3,16 @@
     <button @click="sendPostRequest(1)" class="nav-button">Tutorial</button>
     <button @click="sendPostRequest(2)" class="nav-button">Survey</button>
     <button @click="sendPostRequest(3)" class="nav-button">Open Question</button>
-    <div class="username-bar">
+
+    <div v-if="!isLoggedIn" class="login-container">
+      <input v-model="inputUsername" type="text" placeholder="Enter your username"/>
+      <button @click="login" class="login-button">Login</button>
+    </div>
+
+    <div v-else class="username-bar">
       <span class="username">Welcome, {{ username }}</span>
       <button @click="logout" class="logout-button">Logout</button>
     </div>
-
   </div>
 
   <div id="app">
@@ -63,7 +68,8 @@
 import axios from 'axios';
 import {marked} from 'marked';
 import {useRoute} from 'vue-router';
-import {getUser} from './auth';
+
+import {getUser, login, logout} from './auth';
 
 
 const TYPE_SUBMIT_BUTTON = 99;
@@ -74,10 +80,15 @@ export default {
     return {
       username: getUser() || 'Guest',
       contentList: [],
-      TYPE_SUBMIT_BUTTON: 99
+      TYPE_SUBMIT_BUTTON: 99,
+      inputUsername: ''
     };
   },
-
+  computed: {
+    isLoggedIn() {
+      return !!getUser();
+    }
+  },
   setup() {
     const route = useRoute();
 
@@ -85,6 +96,10 @@ export default {
       route
     }
   },
+  created() {
+    this.username = getUser() || 'Guest';
+  },
+
   beforeRouteEnter(to, from, next) {
     console.log("Current route path:", to.path);
     next(vm => {
@@ -127,6 +142,20 @@ export default {
             console.error('Error fetching content:', error);
           });
     },
+    login() {
+      login(this.inputUsername);
+      this.username = this.inputUsername;
+      this.inputUsername = '';
+      this.refreshPage();
+    },
+    logout() {
+      logout();
+      this.username = 'Guest';
+      this.refreshPage();
+    },
+    refreshPage() {
+      window.location.reload();
+    },
     submitResults() {
       const submitUrl = 'http://localhost:5000/api/submit_results';
       axios.post(submitUrl, {results: this.contentList})
@@ -152,7 +181,8 @@ export default {
           .catch(error => {
             console.error('Error submitting results:', error);
           });
-    },
+    }
+    ,
 
 
     sendPostRequest(buttonNumber) {
@@ -168,7 +198,8 @@ export default {
           .catch(error => {
             console.error('Error sending POST request:', error);
           });
-    },
+    }
+    ,
   }
 }
 </script>
@@ -337,5 +368,36 @@ input[type="radio"], input[type="checkbox"] {
 
 .logout-button:hover {
   background-color: #cc0000;
+}
+
+.login-container {
+  display: flex;
+  align-items: center;
+  margin-right: 20px;
+  background-color: #ffffff;
+  padding: 10px 20px;
+  border-radius: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.login-container input {
+  padding: 5px 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-right: 10px;
+}
+
+.login-button {
+  background-color: #42b983;
+  color: #ffffff;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.login-button:hover {
+  background-color: #2c3e50;
 }
 </style>
