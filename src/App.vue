@@ -41,6 +41,9 @@
           <div v-html="markdownToHtml(item.content.question)" class="markdown"></div>
           <textarea v-model="item.content.answer" class="text-input"></textarea>
         </div>
+        <div v-else-if="item.type === TYPE_SUBMIT_BUTTON" class="button-wrapper">
+          <button @click="submitResults" class="fetch-button">{{ item.content }}</button>
+        </div>
       </div>
     </div>
 
@@ -57,13 +60,17 @@ import axios from 'axios';
 import {marked} from 'marked';
 import {useRoute} from 'vue-router';
 
+const TYPE_SUBMIT_BUTTON = 99;
+
 export default {
   name: 'App',
   data() {
     return {
-      contentList: []
+      contentList: [],
+      TYPE_SUBMIT_BUTTON: 99
     };
   },
+
   setup() {
     const route = useRoute();
 
@@ -101,12 +108,36 @@ export default {
 
       axios.get(apiUrl)
           .then(response => {
-            response.data.forEach(item => {
-              this.contentList.push(item);
-            });
+            this.contentList = response.data;
+            if (this.route.path === '/survey' || this.route.path === '/general') {
+              this.contentList.push({
+                type: TYPE_SUBMIT_BUTTON, // 确保TYPE_SUBMIT_BUTTON已经定义
+                content: "Submit Results"
+              });
+            }
           })
           .catch(error => {
             console.error('Error fetching content:', error);
+          });
+    },
+    submitResults() {
+      const submitUrl = 'http://localhost:5000/api/submit_results';
+      axios.post(submitUrl, {results: this.contentList})
+          .then(response => {
+            if (response.status === 200) {
+              this.contentList.push({
+                type: 1,
+                content: '## Results submitted successfully! Loading the next evaluation...'
+              });
+
+              setTimeout(() => {
+                this.contentList = [];
+                this.fetchContent();
+              }, 3000);
+            }
+          })
+          .catch(error => {
+            console.error('Error submitting results:', error);
           });
     },
 
@@ -234,20 +265,20 @@ export default {
 
 /* 增大单选框和多选框的样式 */
 input[type="radio"], input[type="checkbox"] {
-    /* 调整宽度和高度 */
-    width: 20px;
-    height: 20px;
-    /* 可选：增加边界使点击更容易 */
-    margin: 10px;
-    /* 可选：自定义外观 */
-    cursor: pointer;
+  /* 调整宽度和高度 */
+  width: 20px;
+  height: 20px;
+  /* 可选：增加边界使点击更容易 */
+  margin: 10px;
+  /* 可选：自定义外观 */
+  cursor: pointer;
 }
 
 /* 标签的样式也可以相应调整，以匹配更大的输入框 */
 .option label {
-    font-size: 16px; /* 调整字体大小 */
-    line-height: 24px; /* 调整行高以垂直居中文本 */
-    cursor: pointer; /* 改进用户交互体验 */
+  font-size: 16px; /* 调整字体大小 */
+  line-height: 24px; /* 调整行高以垂直居中文本 */
+  cursor: pointer; /* 改进用户交互体验 */
 }
 
 </style>
