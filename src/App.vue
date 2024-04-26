@@ -1,13 +1,19 @@
 <template>
-  <div id="app">
-    <div class="button-wrapper">
+  <div class="header">
+<!--    <div class="username-bar">-->
       <button @click="sendPostRequest(1)" class="nav-button">Tutorial</button>
       <button @click="sendPostRequest(2)" class="nav-button">Survey</button>
       <button @click="sendPostRequest(3)" class="nav-button">Open Question</button>
+<!--    </div>-->
+    <div class="username-bar">
+    <span class="username">Welcome, {{ username }}</span>
+    <button @click="logout" class="logout-button">Logout</button>
     </div>
 
-    <div class="vertical-space"></div>
+  </div>
 
+  <div id="app">
+    <div class="vertical-space"></div>
     <div class="content-wrapper">
       <div v-for="(item, index) in contentList" :key="index" class="content-box">
         <div v-if="item.type === 1" v-html="markdownToHtml(item.content)" class="markdown"></div>
@@ -59,6 +65,8 @@
 import axios from 'axios';
 import {marked} from 'marked';
 import {useRoute} from 'vue-router';
+import {getUser} from './auth';
+
 
 const TYPE_SUBMIT_BUTTON = 99;
 
@@ -66,6 +74,7 @@ export default {
   name: 'App',
   data() {
     return {
+      username: getUser() || 'Guest',
       contentList: [],
       TYPE_SUBMIT_BUTTON: 99
     };
@@ -172,7 +181,7 @@ export default {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: #2c3e50;
-  margin: 60px auto;
+  margin: 80px auto 100px;
   max-width: 1000px;
 }
 
@@ -288,4 +297,47 @@ input[type="radio"], input[type="checkbox"] {
   cursor: pointer; /* 改进用户交互体验 */
 }
 
+.header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #f0f0f0;
+  padding: 10px;
+  position: fixed; /* 将用户名条固定在页面顶部 */
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 999; /* 确保用户名条位于其他内容之上 */
+}
+
+.username-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center; /* 添加这一行 */
+  background-color: #ffffff;
+  padding: 10px 20px;
+  border-radius: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* 其他样式保持不变 */
+
+.username {
+  margin-right: 10px;
+  font-weight: bold;
+}
+
+.logout-button {
+  background-color: #ff4d4d;
+  color: #ffffff;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.logout-button:hover {
+  background-color: #cc0000;
+}
 </style>
