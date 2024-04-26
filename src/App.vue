@@ -34,7 +34,7 @@
 
 <script>
 import axios from 'axios';
-import { marked } from 'marked';
+import {marked} from 'marked';
 import { useRoute } from 'vue-router';
 
 export default {
@@ -59,13 +59,13 @@ export default {
       let apiUrl;
       switch (this.route.path) {
         case '/tutorial':
-          apiUrl = 'http://localhost:5000/api/get_content';
+          apiUrl = 'http://localhost:5000/api/get_tutorial_content';
           break;
         case '/survey':
-          apiUrl = 'http://localhost:5000/api/get_content';
+          apiUrl = 'http://localhost:5000/api/get_survey_content';
           break;
         case '/general':
-          apiUrl = 'http://localhost:5000/api/get_content';
+          apiUrl = 'http://localhost:5000/api/get_general_content';
           break;
         default:
           console.error('Invalid path');
@@ -73,17 +73,19 @@ export default {
       }
 
       axios.get(apiUrl)
-        .then(response => {
-          const { type, content } = response.data;
-          this.contentList.push({ type, content });
-        })
-        .catch(error => {
-          console.error('Error fetching content:', error);
-        });
+          .then(response => {
+            response.data.forEach(item => {
+              this.contentList.push(item);
+            });
+          })
+          .catch(error => {
+            console.error('Error fetching content:', error);
+          });
     }
   }
 }
 </script>
+
 
 <style>
 #app {
