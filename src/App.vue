@@ -11,8 +11,11 @@
     <div class="content-wrapper">
       <div v-for="(item, index) in contentList" :key="index" class="content-box">
         <div v-if="item.type === 1" v-html="markdownToHtml(item.content)" class="markdown"></div>
-        <div v-else-if="item.type === 2" class="video-wrapper">
-          <video :src="item.content" controls></video>
+        <div v-else-if="item.type === 2" class="video-text-wrapper">
+          <div v-html="markdownToHtml(item.content.text)" class="markdown"></div>
+          <div class="video-wrapper">
+            <video :src="item.content.path" controls></video>
+          </div>
         </div>
         <div v-else-if="item.type === 11" class="survey">
           <div v-html="markdownToHtml(item.content.question)" class="markdown"></div>
@@ -47,6 +50,8 @@
     </div>
   </div>
 </template>
+
+
 <script>
 import axios from 'axios';
 import {marked} from 'marked';
@@ -227,5 +232,22 @@ export default {
   height: 60px;
 }
 
+/* 增大单选框和多选框的样式 */
+input[type="radio"], input[type="checkbox"] {
+    /* 调整宽度和高度 */
+    width: 20px;
+    height: 20px;
+    /* 可选：增加边界使点击更容易 */
+    margin: 10px;
+    /* 可选：自定义外观 */
+    cursor: pointer;
+}
+
+/* 标签的样式也可以相应调整，以匹配更大的输入框 */
+.option label {
+    font-size: 16px; /* 调整字体大小 */
+    line-height: 24px; /* 调整行高以垂直居中文本 */
+    cursor: pointer; /* 改进用户交互体验 */
+}
 
 </style>
