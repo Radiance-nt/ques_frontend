@@ -24,7 +24,7 @@
         <div v-else-if="item.type === 12" class="survey">
           <div v-html="markdownToHtml(item.content.question)" class="markdown"></div>
           <div v-for="(option, idx) in item.content.options" :key="idx" class="option">
-            <input type="checkbox" :id="'option' + idx" :value="option" v-model="item.content.answer">
+            <input type="checkbox" :id="'option' + idx" :value="option">
             <label :for="'option' + idx">{{ option }}</label>
           </div>
         </div>
@@ -98,6 +98,7 @@ export default {
             console.error('Error fetching content:', error);
           });
     },
+
     sendPostRequest(buttonNumber) {
       const postUrl = 'http://localhost:5000/api/direct';
       const data = {
