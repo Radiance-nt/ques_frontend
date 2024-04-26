@@ -1,9 +1,12 @@
 <template>
   <div id="app">
-    <button @click="fetchMarkdown">Render Markdown</button>
-    <div class="markdown-container">
-      <div v-for="(item, index) in markdownList" :key="index" class="markdown-box">
-        <div v-html="markdownToHtml(item)"></div>
+    <button @click="fetchContent">Fetch Content</button>
+    <div class="content-container">
+      <div v-for="(item, index) in contentList" :key="index" class="content-box">
+        <div v-if="item.type === 1" v-html="markdownToHtml(item.content)"></div>
+        <div v-else-if="item.type === 2">
+          <video :src="item.content" controls></video>
+        </div>
       </div>
     </div>
   </div>
@@ -17,21 +20,21 @@ export default {
   name: 'App',
   data() {
     return {
-      markdown: '',
-      markdownList: []
+      contentList: []
     };
   },
   methods: {
     markdownToHtml(markdown) {
       return marked(markdown);
     },
-    fetchMarkdown() {
+    fetchContent() {
       axios.get('http://localhost:5000/api/get_content')
         .then(response => {
-          this.markdownList.push(response.data);
+          const { type, content } = response.data;
+          this.contentList.push({ type, content });
         })
         .catch(error => {
-          console.error('Error fetching markdown:', error);
+          console.error('Error fetching content:', error);
         });
     }
   }
@@ -48,13 +51,13 @@ export default {
   margin-top: 60px;
 }
 
-.markdown-container {
+.content-container {
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
-.markdown-box {
+.content-box {
   min-width: 600px;
   background-color: #f0f0f0;
   padding: 20px;
