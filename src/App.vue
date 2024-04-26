@@ -35,6 +35,7 @@
 <script>
 import axios from 'axios';
 import { marked } from 'marked';
+import { useRoute } from 'vue-router';
 
 export default {
   name: 'App',
@@ -43,12 +44,35 @@ export default {
       contentList: []
     };
   },
+  setup() {
+    const route = useRoute();
+
+    return {
+      route
+    }
+  },
   methods: {
     markdownToHtml(markdown) {
       return marked(markdown);
     },
     fetchContent() {
-      axios.get('http://localhost:5000/api/get_content')
+      let apiUrl;
+      switch (this.route.path) {
+        case '/tutorial':
+          apiUrl = 'http://localhost:5000/api/get_content';
+          break;
+        case '/survey':
+          apiUrl = 'http://localhost:5000/api/get_content';
+          break;
+        case '/general':
+          apiUrl = 'http://localhost:5000/api/get_content';
+          break;
+        default:
+          console.error('Invalid path');
+          return;
+      }
+
+      axios.get(apiUrl)
         .then(response => {
           const { type, content } = response.data;
           this.contentList.push({ type, content });
