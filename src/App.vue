@@ -27,7 +27,10 @@
       </div>
     </div>
     <div class="button-wrapper">
-      <button @click="fetchContent" class="fetch-button">Fetch Content</button>
+      <!--      <button @click="fetchContent" class="fetch-button">Fetch Content</button>-->
+      <button @click="sendPostRequest(1)" class="fetch-button">Tutorial</button>
+      <button @click="sendPostRequest(2)" class="fetch-button">Survey</button>
+      <button @click="sendPostRequest(3)" class="fetch-button">Open Question</button>
     </div>
   </div>
 </template>
@@ -35,7 +38,7 @@
 <script>
 import axios from 'axios';
 import {marked} from 'marked';
-import { useRoute } from 'vue-router';
+import {useRoute} from 'vue-router';
 
 export default {
   name: 'App',
@@ -81,11 +84,24 @@ export default {
           .catch(error => {
             console.error('Error fetching content:', error);
           });
-    }
+    },
+    sendPostRequest(buttonNumber) {
+      const postUrl = 'http://localhost:5000/api/direct';
+      const data = {
+        buttonNumber,
+      };
+      axios.post(postUrl, data)
+          .then(response => {
+            const redirectUrl = response.data.redirectUrl;
+            window.location.href = redirectUrl;
+          })
+          .catch(error => {
+            console.error('Error sending POST request:', error);
+          });
+    },
   }
 }
 </script>
-
 
 <style>
 #app {
@@ -154,4 +170,18 @@ export default {
 .fetch-button:hover {
   background-color: #2c3e50;
 }
+
+.button-wrapper {
+  justify-content: space-between;
+}
+
+.fetch-button {
+  margin-right: 50px;
+}
+
+.fetch-button:last-child {
+  margin-right: 0;
+}
+
+
 </style>
