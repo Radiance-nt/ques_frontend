@@ -1,13 +1,11 @@
 <template>
   <div class="header">
-<!--    <div class="username-bar">-->
-      <button @click="sendPostRequest(1)" class="nav-button">Tutorial</button>
-      <button @click="sendPostRequest(2)" class="nav-button">Survey</button>
-      <button @click="sendPostRequest(3)" class="nav-button">Open Question</button>
-<!--    </div>-->
+    <button @click="sendPostRequest(1)" class="nav-button">Tutorial</button>
+    <button @click="sendPostRequest(2)" class="nav-button">Survey</button>
+    <button @click="sendPostRequest(3)" class="nav-button">Open Question</button>
     <div class="username-bar">
-    <span class="username">Welcome, {{ username }}</span>
-    <button @click="logout" class="logout-button">Logout</button>
+      <span class="username">Welcome, {{ username }}</span>
+      <button @click="logout" class="logout-button">Logout</button>
     </div>
 
   </div>
