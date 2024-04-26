@@ -1,5 +1,13 @@
 <template>
   <div id="app">
+    <div class="button-wrapper">
+      <button @click="sendPostRequest(1)" class="nav-button">Tutorial</button>
+      <button @click="sendPostRequest(2)" class="nav-button">Survey</button>
+      <button @click="sendPostRequest(3)" class="nav-button">Open Question</button>
+    </div>
+
+    <div class="vertical-space"></div>
+
     <div class="content-wrapper">
       <div v-for="(item, index) in contentList" :key="index" class="content-box">
         <div v-if="item.type === 1" v-html="markdownToHtml(item.content)" class="markdown"></div>
@@ -7,34 +15,32 @@
           <video :src="item.content" controls></video>
         </div>
         <div v-else-if="item.type === 11" class="survey">
-          <h3>{{ item.content.question }}</h3>
+          <div v-html="markdownToHtml(item.content.question)" class="markdown"></div>
           <div v-for="(option, idx) in item.content.options" :key="idx" class="option">
             <input type="radio" :id="'option' + idx" :value="option" v-model="item.content.answer">
             <label :for="'option' + idx">{{ option }}</label>
           </div>
         </div>
         <div v-else-if="item.type === 12" class="survey">
-          <h3>{{ item.content.question }}</h3>
+          <div v-html="markdownToHtml(item.content.question)" class="markdown"></div>
           <div v-for="(option, idx) in item.content.options" :key="idx" class="option">
             <input type="checkbox" :id="'option' + idx" :value="option" v-model="item.content.answer">
             <label :for="'option' + idx">{{ option }}</label>
           </div>
         </div>
         <div v-else-if="item.type === 13" class="survey">
-          <h3>{{ item.content.question }}</h3>
+          <div v-html="markdownToHtml(item.content.question)" class="markdown"></div>
           <textarea v-model="item.content.answer" class="text-input"></textarea>
         </div>
       </div>
     </div>
+
+    <div class="vertical-space"></div>
     <div class="button-wrapper">
       <button @click="fetchContent" class="fetch-button">Fetch Content</button>
-      <button @click="sendPostRequest(1)" class="fetch-button">Tutorial</button>
-      <button @click="sendPostRequest(2)" class="fetch-button">Survey</button>
-      <button @click="sendPostRequest(3)" class="fetch-button">Open Question</button>
     </div>
   </div>
 </template>
-
 <script>
 import axios from 'axios';
 import {marked} from 'marked';
@@ -65,7 +71,7 @@ export default {
       return marked(markdown);
     },
     fetchContent() {
-    console.log("fetchContent");
+      console.log("fetchContent");
       let apiUrl;
       switch (this.route.path) {
         case '/tutorial':
@@ -178,16 +184,34 @@ export default {
   background-color: #2c3e50;
 }
 
+
+.nav-button {
+  width: 180px; /* 设置按钮宽度为 120 像素 */
+  background-color: #3498db;
+  color: #ffffff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 0;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  margin-right: 50px;
+}
+
+.nav-button:hover {
+  background-color: #2980b9;
+}
+
+
 .button-wrapper {
   justify-content: space-between;
 }
 
-.fetch-button {
-  margin-right: 50px;
-}
-
 .fetch-button:last-child {
   margin-right: 0;
+}
+
+.vertical-space {
+  height: 60px;
 }
 
 
