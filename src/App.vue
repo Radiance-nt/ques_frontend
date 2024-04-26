@@ -1,13 +1,33 @@
 <template>
   <div id="app">
-    <button @click="fetchContent">Fetch Content</button>
-    <div class="content-container">
+    <div class="content-wrapper">
       <div v-for="(item, index) in contentList" :key="index" class="content-box">
-        <div v-if="item.type === 1" v-html="markdownToHtml(item.content)"></div>
-        <div v-else-if="item.type === 2">
+        <div v-if="item.type === 1" v-html="markdownToHtml(item.content)" class="markdown"></div>
+        <div v-else-if="item.type === 2" class="video-wrapper">
           <video :src="item.content" controls></video>
         </div>
+        <div v-else-if="item.type === 11" class="survey">
+          <h3>{{ item.content.question }}</h3>
+          <div v-for="(option, idx) in item.content.options" :key="idx" class="option">
+            <input type="radio" :id="'option' + idx" :value="option" v-model="item.content.answer">
+            <label :for="'option' + idx">{{ option }}</label>
+          </div>
+        </div>
+        <div v-else-if="item.type === 12" class="survey">
+          <h3>{{ item.content.question }}</h3>
+          <div v-for="(option, idx) in item.content.options" :key="idx" class="option">
+            <input type="checkbox" :id="'option' + idx" :value="option" v-model="item.content.answer">
+            <label :for="'option' + idx">{{ option }}</label>
+          </div>
+        </div>
+        <div v-else-if="item.type === 13" class="survey">
+          <h3>{{ item.content.question }}</h3>
+          <textarea v-model="item.content.answer" class="text-input"></textarea>
+        </div>
       </div>
+    </div>
+    <div class="button-wrapper">
+      <button @click="fetchContent" class="fetch-button">Fetch Content</button>
     </div>
   </div>
 </template>
@@ -46,23 +66,66 @@ export default {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
+  margin: 60px auto;
+  max-width: 800px;
 }
 
-.content-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+.content-wrapper {
+  background-color: #f0f0f0;
+  padding: 20px;
+  border-radius: 10px;
 }
 
 .content-box {
-  min-width: 600px;
-  background-color: #f0f0f0;
-  padding: 20px;
   margin-bottom: 20px;
+  background-color: #ffffff;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.markdown {
   text-align: left;
-  border-radius: 10px;
+}
+
+.video-wrapper {
+  display: flex;
+  justify-content: center;
+}
+
+.survey h3 {
+  margin-top: 0;
+}
+
+.option {
+  margin-bottom: 10px;
+}
+
+.text-input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+.button-wrapper {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.fetch-button {
+  background-color: #42b983;
+  color: #ffffff;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.fetch-button:hover {
+  background-color: #2c3e50;
 }
 </style>
