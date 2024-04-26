@@ -125,21 +125,28 @@ export default {
       axios.post(submitUrl, {results: this.contentList})
           .then(response => {
             if (response.status === 200) {
-              this.contentList.push({
-                type: 1,
-                content: '## Results submitted successfully! Loading the next evaluation...'
-              });
-
-              setTimeout(() => {
-                this.contentList = [];
-                this.fetchContent();
-              }, 3000);
+              if (this.route.path === '/survey') {
+                this.contentList.push({
+                  type: 1,
+                  content: '## Results submitted successfully! $\n## Loading the next evaluation...'
+                });
+                setTimeout(() => {
+                  this.contentList = [];
+                  this.fetchContent();
+                }, 3000);
+              } else if (this.route.path === '/general') {
+                this.contentList.push({
+                  type: 1,
+                  content: '## Results submitted successfully! \n## Thank you for your participation.'
+                });
+              }
             }
           })
           .catch(error => {
             console.error('Error submitting results:', error);
           });
     },
+
 
     sendPostRequest(buttonNumber) {
       const postUrl = 'http://localhost:5000/api/direct';
