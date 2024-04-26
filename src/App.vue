@@ -111,6 +111,14 @@ export default {
       return marked(markdown);
     },
     fetchContent() {
+
+      if ((!this.isLoggedIn) && ((this.route.path === '/survey' || this.route.path === '/general'))) {
+        this.contentList.push({
+          type: 1,
+          content: '### Please login firstly!'
+        });
+        return;
+      }
       console.log("fetchContent");
       let apiUrl;
       switch (this.route.path) {
