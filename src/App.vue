@@ -27,7 +27,7 @@
       </div>
     </div>
     <div class="button-wrapper">
-      <!--      <button @click="fetchContent" class="fetch-button">Fetch Content</button>-->
+      <button @click="fetchContent" class="fetch-button">Fetch Content</button>
       <button @click="sendPostRequest(1)" class="fetch-button">Tutorial</button>
       <button @click="sendPostRequest(2)" class="fetch-button">Survey</button>
       <button @click="sendPostRequest(3)" class="fetch-button">Open Question</button>
@@ -54,11 +54,18 @@ export default {
       route
     }
   },
+  beforeRouteEnter(to, from, next) {
+    console.log("Current route path:", to.path);
+    next(vm => {
+      vm.fetchContent();
+    });
+  },
   methods: {
     markdownToHtml(markdown) {
       return marked(markdown);
     },
     fetchContent() {
+    console.log("fetchContent");
       let apiUrl;
       switch (this.route.path) {
         case '/tutorial':
