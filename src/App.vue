@@ -41,7 +41,7 @@
           </div>
           <div class="other-option">
             <input type="checkbox" :id="'option-' + index + '-others'" v-model="item.content.otherChecked">
-            <label :for="'option-' + index + '-others'">Others  </label>
+            <label :for="'option-' + index + '-others'">Others </label>
             <input type="text" v-model="item.content.others" :disabled="!item.content.otherChecked"
                    placeholder="Please specify">
           </div>
@@ -170,6 +170,7 @@ export default {
       axios.post(submitUrl, {results: this.contentList})
           .then(response => {
             if (response.status === 200) {
+              this.removeSubmitButton();
               if (this.route.path === '/survey') {
                 this.contentList.push({
                   type: 1,
@@ -190,10 +191,14 @@ export default {
           .catch(error => {
             console.error('Error submitting results:', error);
           });
-    }
-    ,
+    },
 
-
+    removeSubmitButton() {
+      const submitButtonIndex = this.contentList.findIndex(item => item.type === TYPE_SUBMIT_BUTTON);
+      if (submitButtonIndex !== -1) {
+        this.contentList.splice(submitButtonIndex, 1);
+      }
+    },
     sendPostRequest(buttonNumber) {
       const postUrl = 'http://localhost:5000/api/direct';
       const data = {
