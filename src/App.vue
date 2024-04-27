@@ -41,7 +41,7 @@
           </div>
           <div class="other-option">
             <input type="checkbox" :id="'option-' + index + '-others'" v-model="item.content.otherChecked">
-            <label :for="'option-' + index + '-others'">Others</label>
+            <label :for="'option-' + index + '-others'">Others  </label>
             <input type="text" v-model="item.content.others" :disabled="!item.content.otherChecked"
                    placeholder="Please specify">
           </div>
