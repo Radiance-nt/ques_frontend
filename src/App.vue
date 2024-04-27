@@ -35,15 +35,16 @@
         </div>
         <div v-else-if="item.type === 12" class="survey">
           <div v-html="markdownToHtml(item.content.question)" class="markdown"></div>
-<!--          <div v-for="(option, idx) in item.content.options" :key="idx" class="option">-->
-<!--            <input type="checkbox" :id="'option' + idx" :value="option">-->
-<!--            <label :for="'option' + idx">{{ option }}</label>-->
-<!--          </div>-->
-<!--          <div class="other-option">-->
-<!--            <input type="checkbox" id="otherOption" value="other">-->
-<!--            <label for="otherOption">Others</label>-->
-<!--            <input type="text" v-model="otherValue" placeholder="">-->
-<!--          </div>-->
+          <div v-for="(option, idx) in item.content.options" :key="idx" class="option">
+            <input type="checkbox" :id="'option-' + index + '-' + idx" v-model="item.content.answer[idx]">
+            <label :for="'option-' + index + '-' + idx">{{ option }}</label>
+          </div>
+          <div class="other-option">
+            <input type="checkbox" :id="'option-' + index + '-others'" v-model="item.content.otherChecked">
+            <label :for="'option-' + index + '-others'">Others</label>
+            <input type="text" v-model="item.content.others" :disabled="!item.content.otherChecked"
+                   placeholder="Please specify">
+          </div>
         </div>
 
         <div v-else-if="item.type === 13" class="survey">
@@ -172,7 +173,7 @@ export default {
               if (this.route.path === '/survey') {
                 this.contentList.push({
                   type: 1,
-                  content: '## Results submitted successfully! $\n## Loading the next evaluation...'
+                  content: '## Results submitted successfully! \n## Loading the next evaluation...'
                 });
                 setTimeout(() => {
                   this.contentList = [];
