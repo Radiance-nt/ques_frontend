@@ -15,8 +15,12 @@
     </div>
   </div>
 
+  <div class="message-bar">
+    <span class="message">{{ message }}</span>
+  </div>
+
   <div id="app">
-    <div class="vertical-space"></div>
+    <!--    <div class="vertical-space"></div>-->
     <div class="content-wrapper">
       <div v-for="(item, index) in contentList" :key="index" class="content-box">
         <div v-if="item.type === 1" v-html="markdownToHtml(item.content)" class="markdown"></div>
@@ -82,7 +86,8 @@ export default {
       username: getUser() || 'Guest',
       contentList: [],
       TYPE_SUBMIT_BUTTON: 99,
-      inputUsername: ''
+      inputUsername: '',
+      message: ''
     };
   },
   computed: {
@@ -99,6 +104,7 @@ export default {
   },
   created() {
     this.username = getUser() || 'Guest';
+    this.fetchMessage();
   },
 
   beforeRouteEnter(to, from, next) {
@@ -110,6 +116,17 @@ export default {
   methods: {
     markdownToHtml(markdown) {
       return marked(markdown);
+    },
+
+    fetchMessage() {
+      const postUrl = 'http://localhost:5000/api/bubble';
+      axios.post(postUrl)
+          .then(response => {
+            this.message = response.data.message;
+          })
+          .catch(error => {
+            console.error('Error fetching message:', error);
+          });
     },
     fetchContent() {
 
@@ -178,6 +195,7 @@ export default {
                 });
                 setTimeout(() => {
                   this.contentList = [];
+                  this.fetchMessage();
                   this.fetchContent();
                 }, 3000);
               } else if (this.route.path === '/general') {
@@ -224,7 +242,7 @@ export default {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: #2c3e50;
-  margin: 80px auto 100px;
+  margin: 80px auto 80px;
   max-width: 1000px;
 }
 
@@ -414,4 +432,22 @@ input[type="radio"], input[type="checkbox"] {
 .login-button:hover {
   background-color: #2c3e50;
 }
+
+.message-bar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #f0f0f0;
+  padding: 20px;
+  top: 10px;
+  left: 0;
+  right: 0;
+  z-index: 500;
+}
+
+.message {
+  font-weight: bold;
+  color: #2c3e50;
+}
+
 </style>
