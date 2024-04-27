@@ -29,21 +29,21 @@
         <div v-else-if="item.type === 11" class="survey">
           <div v-html="markdownToHtml(item.content.question)" class="markdown"></div>
           <div v-for="(option, idx) in item.content.options" :key="idx" class="option">
-            <input type="radio" :id="'option' + idx" :value="option" v-model="item.content.answer">
-            <label :for="'option' + idx">{{ option }}</label>
+            <input type="radio" :id="`option-${index}-${idx}`" :value="option" v-model="item.content.answer">
+            <label :for="`option-${index}-${idx}`" @click.prevent>{{ option }}</label>
           </div>
         </div>
         <div v-else-if="item.type === 12" class="survey">
           <div v-html="markdownToHtml(item.content.question)" class="markdown"></div>
-          <div v-for="(option, idx) in item.content.options" :key="idx" class="option">
-            <input type="checkbox" :id="'option' + idx" :value="option">
-            <label :for="'option' + idx">{{ option }}</label>
-          </div>
-          <div class="other-option">
-            <input type="checkbox" id="otherOption" value="other">
-            <label for="otherOption">Others</label>
-            <input type="text" v-model="otherValue" placeholder="">
-          </div>
+<!--          <div v-for="(option, idx) in item.content.options" :key="idx" class="option">-->
+<!--            <input type="checkbox" :id="'option' + idx" :value="option">-->
+<!--            <label :for="'option' + idx">{{ option }}</label>-->
+<!--          </div>-->
+<!--          <div class="other-option">-->
+<!--            <input type="checkbox" id="otherOption" value="other">-->
+<!--            <label for="otherOption">Others</label>-->
+<!--            <input type="text" v-model="otherValue" placeholder="">-->
+<!--          </div>-->
         </div>
 
         <div v-else-if="item.type === 13" class="survey">
