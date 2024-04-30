@@ -164,7 +164,7 @@ export default {
             this.contentList = response.data;
             if (this.route.path === '/survey' || this.route.path === '/general') {
               this.contentList.push({
-                type: TYPE_SUBMIT_BUTTON, // 确保TYPE_SUBMIT_BUTTON已经定义
+                type: TYPE_SUBMIT_BUTTON,
                 content: "Submit Results"
               });
             }
@@ -210,6 +210,7 @@ export default {
                   this.fetchContent();
                 }, 3000);
               } else if (this.route.path === '/general') {
+                this.fetchMessage();
                 this.contentList.push({
                   type: 1,
                   content: '## Results submitted successfully! \n## Thank you for your participation.'
