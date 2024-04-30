@@ -120,7 +120,12 @@ export default {
 
     fetchMessage() {
       const postUrl = 'http://localhost:5000/api/bubble';
-      axios.post(postUrl)
+      const data = {
+        username: this.username,
+        mode: this.route.path,
+      };
+
+      axios.post(postUrl, data)
           .then(response => {
             this.message = response.data.message;
           })
@@ -154,7 +159,7 @@ export default {
           return;
       }
 
-      axios.get(apiUrl)
+      axios.post(apiUrl, {username: this.username})
           .then(response => {
             this.contentList = response.data;
             if (this.route.path === '/survey' || this.route.path === '/general') {
@@ -184,7 +189,13 @@ export default {
     },
     submitResults() {
       const submitUrl = 'http://localhost:5000/api/submit_results';
-      axios.post(submitUrl, {results: this.contentList})
+      const submissionData = {
+        results: this.contentList,
+        username: this.username,
+        mode: this.route.path,
+      };
+
+      axios.post(submitUrl, submissionData)
           .then(response => {
             if (response.status === 200) {
               this.removeSubmitButton();
@@ -210,6 +221,7 @@ export default {
             console.error('Error submitting results:', error);
           });
     },
+
 
     removeSubmitButton() {
       const submitButtonIndex = this.contentList.findIndex(item => item.type === TYPE_SUBMIT_BUTTON);
@@ -368,20 +380,17 @@ input[type="radio"], input[type="checkbox"] {
   top: 0;
   left: 0;
   right: 0;
-  z-index: 999; /* 确保用户名条位于其他内容之上 */
 }
 
 .username-bar {
   display: flex;
   align-items: center;
-  justify-content: center; /* 添加这一行 */
+  justify-content: center;
   background-color: #ffffff;
   padding: 10px 20px;
   border-radius: 20px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
-
-/* 其他样式保持不变 */
 
 .username {
   margin-right: 10px;
