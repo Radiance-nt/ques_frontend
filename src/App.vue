@@ -138,7 +138,7 @@ export default {
       if ((!this.isLoggedIn) && ((this.route.path === '/survey' || this.route.path === '/general'))) {
         this.contentList.push({
           type: 1,
-          content: '### Please login firstly!'
+          content: '### Please login first!'
         });
         return;
       }
