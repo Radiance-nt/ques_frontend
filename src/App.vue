@@ -162,12 +162,12 @@ export default {
       axios.post(apiUrl, {username: this.username})
           .then(response => {
             this.contentList = response.data;
-            if (this.route.path === '/survey' || this.route.path === '/general') {
-              this.contentList.push({
-                type: TYPE_SUBMIT_BUTTON,
-                content: "Submit Results"
-              });
-            }
+            // if (this.route.path === '/survey' || this.route.path === '/general') {
+            //   this.contentList.push({
+            //     type: TYPE_SUBMIT_BUTTON,
+            //     content: "Submit Results"
+            //   });
+            // }
           })
           .catch(error => {
             console.error('Error fetching content:', error);
