@@ -85,6 +85,7 @@ export default {
     return {
       username: getUser() || 'Guest',
       contentList: [],
+      baseUrl: process.env.VUE_APP_API_BASE_URL,
       TYPE_SUBMIT_BUTTON: 99,
       inputUsername: '',
       message: ''
@@ -119,7 +120,7 @@ export default {
     },
 
     fetchMessage() {
-      const postUrl = 'http://localhost:5000/api/bubble';
+      const postUrl = `${process.env.VUE_APP_API_BASE_URL}/api/bubble`;
       const data = {
         username: this.username,
         mode: this.route.path,
@@ -142,17 +143,16 @@ export default {
         });
         return;
       }
-      console.log("fetchContent");
       let apiUrl;
       switch (this.route.path) {
         case '/tutorial':
-          apiUrl = 'http://localhost:5000/api/get_tutorial_content';
+          apiUrl = `${process.env.VUE_APP_API_BASE_URL}/api/get_tutorial_content`; // 正确使用baseUrl
           break;
         case '/survey':
-          apiUrl = 'http://localhost:5000/api/get_survey_content';
+          apiUrl = `${process.env.VUE_APP_API_BASE_URL}/api/get_survey_content`; // 正确使用baseUrl
           break;
         case '/general':
-          apiUrl = 'http://localhost:5000/api/get_general_content';
+          apiUrl = `${process.env.VUE_APP_API_BASE_URL}/api/get_general_content`; // 正确使用baseUrl
           break;
         default:
           console.error('Invalid path');
@@ -188,7 +188,7 @@ export default {
       window.location.reload();
     },
     submitResults() {
-      const submitUrl = 'http://localhost:5000/api/submit_results';
+      const submitUrl = `${process.env.VUE_APP_API_BASE_URL}/api/submit_results`;
       const submissionData = {
         results: this.contentList,
         username: this.username,
@@ -231,7 +231,7 @@ export default {
       }
     },
     sendPostRequest(buttonNumber) {
-      const postUrl = 'http://localhost:5000/api/direct';
+      const postUrl = `${process.env.VUE_APP_API_BASE_URL}/api/direct`;
       const data = {
         buttonNumber,
       };
