@@ -1,3 +1,6 @@
+<!--TODO: 登陆验证email地址-->
+<!--TODO: 必选，不为空（如果item["required"]为True）-->
+
 <template>
   <div class="header">
     <button @click="sendPostRequest(1)" class="nav-button">Tutorial</button>
