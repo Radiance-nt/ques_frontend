@@ -1,4 +1,3 @@
-<!--TODO: 登陆验证email地址-->
 <!--TODO: 必选，不为空（如果item["required"]为True）-->
 
 <template>
@@ -8,7 +7,7 @@
     <button @click="sendPostRequest(3)" class="nav-button">Open Question</button>
 
     <div v-if="!isLoggedIn" class="login-container">
-      <input v-model="inputUsername" type="text" placeholder="Enter your username"/>
+      <input v-model="inputUsername" type="text" placeholder="Enter your email address"/>
       <button @click="login" class="login-button">Login</button>
     </div>
 
@@ -177,6 +176,11 @@ export default {
           });
     },
     login() {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(this.inputUsername)) {
+        this.message = "Please enter a valid email address.";
+        return;
+      }
       login(this.inputUsername);
       this.username = this.inputUsername;
       this.inputUsername = '';
