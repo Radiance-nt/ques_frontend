@@ -35,10 +35,12 @@
         <div v-else-if="item.type === 11" class="survey">
           <div v-html="markdownToHtml(item.content.question)" class="markdown"></div>
           <div v-for="(option, idx) in item.content.options" :key="idx" class="option">
-            <input type="radio" :id="`option-${index}-${idx}`" :value="option" v-model="item.content.answer">
+            <input type="radio" :id="`option-${index}-${idx}`" :value="option" v-model="item.content.answer"
+                   :required="item.required">
             <label :for="`option-${index}-${idx}`" @click.prevent>{{ option }}</label>
           </div>
         </div>
+
         <div v-else-if="item.type === 12" class="survey">
           <div v-html="markdownToHtml(item.content.question)" class="markdown"></div>
           <div v-for="(option, idx) in item.content.options" :key="idx" class="option">
@@ -47,16 +49,17 @@
           </div>
           <div class="other-option">
             <input type="checkbox" :id="'option-' + index + '-others'" v-model="item.content.otherChecked">
-            <label :for="'option-' + index + '-others'">Others </label>
+            <label :for="'option-' + index + '-others'">Others</label>
             <input type="text" v-model="item.content.others" :disabled="!item.content.otherChecked"
-                   placeholder="Please specify">
+                   placeholder="Please specify" :required="item.required && item.content.otherChecked">
           </div>
         </div>
 
         <div v-else-if="item.type === 13" class="survey">
           <div v-html="markdownToHtml(item.content.question)" class="markdown"></div>
-          <textarea v-model="item.content.answer" class="text-input"></textarea>
+          <textarea v-model="item.content.answer" class="text-input" :required="item.required"></textarea>
         </div>
+
         <div v-else-if="item.type === TYPE_SUBMIT_BUTTON" class="button-wrapper">
           <button @click="submitResults" class="fetch-button">{{ item.content }}</button>
         </div>
@@ -195,6 +198,25 @@ export default {
       window.location.reload();
     },
     submitResults() {
+      for (let item of this.contentList) {
+        console.info('Item:', item.content.answer);
+        console.info('Item required:', item.content.required);
+
+        if (item.content.required) {
+          if (item.type === 11 || item.type === 13) {
+            if (!item.content.answer) {
+              alert("Please fill in all required fields.");
+              return;
+            }
+          } else if (item.type === 12) {
+            const hasChecked = item.content.answer.includes(true) || (item.content.otherChecked && item.content.others.trim() !== '');
+            if (!hasChecked) {
+              alert("Please fill in all required fields.");
+              return;
+            }
+          }
+        }
+      }
       const submitUrl = `${process.env.VUE_APP_API_BASE_URL}/api/submit_results`;
       const submissionData = {
         results: this.contentList,
